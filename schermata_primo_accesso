@@ -1,0 +1,27 @@
+<body onload="checkWelcome()">
+  <div id="welcome-screen" style="display:none; text-align:center; max-width:600px;">
+    <h1 style="color:#4caf50; font-size:2em;">🌱 Benvenuto nel Giardino dell’Idea</h1>
+    <p style="font-size:1.1em; color:#333; margin: 20px 0;">
+      Ogni giorno puoi piantare un seme magico e far crescere il tuo albero delle idee. <br>
+      Scopri, sogna, disegna… il giardino cresce con te!
+    </p>
+    <button onclick="enterGarden()" style="background-color:#4caf50; font-size:1.2em;">🌼 Entra nel Giardino</button>
+  </div>
+
+  <div id="garden-interface" style="display:none;">
+    <!-- Tutto il contenuto attuale del giardino va qui -->
+  </div>
+
+  <script>
+    function checkWelcome() {
+      const firstTime = localStorage.getItem('firstVisit') !== 'false';
+      document.getElementById('welcome-screen').style.display = firstTime ? 'block' : 'none';
+      document.getElementById('garden-interface').style.display = firstTime ? 'none' : 'block';
+    }
+
+    function enterGarden() {
+      localStorage.setItem('firstVisit', 'false');
+      document.getElementById('welcome-screen').style.display = 'none';
+      document.getElementById('garden-interface').style.display = 'block';
+    }
+  </script>
