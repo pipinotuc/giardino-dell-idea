@@ -1,60 +1,119 @@
 <div class="desiderio">
   <h2>🌠 Desiderio Segreto</h2>
-  <p id="desiderio-testo"></p>
+  <p id="desiderio-testo" class="fade-line"></p>
   <textarea id="desiderio-input" rows="2" placeholder="Scrivi qui il tuo desiderio..."></textarea>
-  <button onclick="salvaDesiderio()" style="margin-top:10px">💫 Salva Desiderio</button>
+  <button onclick="salvaDesiderio()">💫 Salva Desiderio</button>
+  <p id="conferma-desiderio" class="conferma" style="display:none;">🌟 Desiderio custodito da Mimi!</p>
 </div>
 
+
 <style>
-  .desiderio {
-    width: 90%;
-    max-width: 600px;
-    background: #fce4ec;
-    border: 2px solid #f06292;
-    border-radius: 10px;
-    padding: 15px;
-    margin-top: 30px;
-    text-align: center;
-  }
-  .desiderio textarea {
-    width: 100%;
-    padding: 8px;
-    font-family: inherit;
-    font-size: 1em;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    margin-top: 10px;
-  }
+.desiderio {
+  width: 90%;
+  max-width: 600px;
+  background: #fce4ec;
+  border: 2px solid #f06292;
+  border-radius: 12px;
+  padding: 18px;
+  margin: 30px auto 0;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(240, 98, 146, 0.1);
+}
+
+.desiderio h2 {
+  margin-top: 0;
+  color: #ad1457;
+}
+
+.desiderio textarea {
+  width: 100%;
+  padding: 10px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 1em;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-top: 12px;
+  transition: box-shadow 0.3s;
+}
+
+.desiderio textarea:focus {
+  box-shadow: 0 0 0 3px #f8bbd0;
+  outline: none;
+}
+
+.desiderio button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #ec407a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.desiderio button:hover {
+  background-color: #d81b60;
+}
+
+.conferma {
+  margin-top: 15px;
+  color: #880e4f;
+  font-style: italic;
+  opacity: 0;
+  animation: fadeIn 0.8s forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
 </style>
 
 <script>
-  function checkDesiderio() {
-    const oggi = new Date().toLocaleDateString('it-IT');
-    const ultimo = localStorage.getItem('ultimoDesiderio') || '';
-    const salvato = localStorage.getItem('desiderio_' + oggi);
+function checkDesiderio() {
+  const oggi = new Date().toLocaleDateString('it-IT');
+  const salvato = localStorage.getItem('desiderio_' + oggi);
 
-    const testo = document.getElementById('desiderio-testo');
-    const box = document.getElementById('desiderio-input');
+  const testo = document.getElementById('desiderio-testo');
+  const box = document.getElementById('desiderio-input');
+  const conferma = document.getElementById('conferma-desiderio');
 
-    if (salvato) {
-      testo.textContent = `✨ Il tuo desiderio di oggi (${oggi}):`;
-      box.value = salvato;
-      box.disabled = true;
-    } else {
-      testo.textContent = `🧚 Mimi ti chiede: hai un desiderio oggi, ${oggi}?`;
-      box.disabled = false;
-    }
+  conferma.style.display = 'none';
+
+  if (salvato) {
+    testo.textContent = `✨ Il tuo desiderio di oggi (${oggi}):`;
+    box.value = salvato;
+    box.disabled = true;
+  } else {
+    box.value = '';
+    box.disabled = false;
+    scriviTesto(testo, `🧚 Mimi ti chiede: hai un desiderio oggi, ${oggi}?`);
   }
+}
 
-  function salvaDesiderio() {
-    const oggi = new Date().toLocaleDateString('it-IT');
-    const valore = document.getElementById('desiderio-input').value.trim();
-    if (valore) {
-      localStorage.setItem('desiderio_' + oggi, valore);
-      localStorage.setItem('ultimoDesiderio', oggi);
-      checkDesiderio();
-    }
+function scriviTesto(elemento, testo, velocità = 30) {
+  elemento.textContent = '';
+  let i = 0;
+  const intervallo = setInterval(() => {
+    elemento.textContent += testo[i];
+    i++;
+    if (i >= testo.length) clearInterval(intervallo);
+  }, velocità);
+}
+
+function salvaDesiderio() {
+  const oggi = new Date().toLocaleDateString('it-IT');
+  const valore = document.getElementById('desiderio-input').value.trim();
+  const conferma = document.getElementById('conferma-desiderio');
+
+  if (valore) {
+    localStorage.setItem('desiderio_' + oggi, valore);
+    localStorage.setItem('ultimoDesiderio', oggi);
+    checkDesiderio();
+    conferma.style.display = 'block';
   }
+}
 
-  checkDesiderio();
+checkDesiderio();
 </script>
