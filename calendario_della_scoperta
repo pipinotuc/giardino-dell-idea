@@ -9,34 +9,49 @@
     max-width: 600px;
     background: #e3f2fd;
     border: 2px solid #64b5f6;
-    border-radius: 10px;
-    padding: 15px;
-    margin-top: 30px;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 30px auto 0;
+    box-shadow: 0 4px 8px rgba(100, 181, 246, 0.2);
+    font-family: 'Segoe UI', sans-serif;
   }
+
   .calendario h2 {
     margin-top: 0;
     color: #1976d2;
+    text-align: center;
+    font-size: 1.4em;
   }
+
   #calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
+    gap: 6px;
     text-align: center;
   }
+
   .calendar-cell {
-    padding: 6px;
-    background: #fff;
+    padding: 8px;
+    background: #ffffff;
     border-radius: 6px;
     border: 1px solid #90caf9;
-    min-height: 40px;
+    min-height: 42px;
     font-size: 1em;
+    transition: background 0.3s, transform 0.2s;
   }
+
   .calendar-cell.seed-day {
     background: #c8e6c9;
     font-weight: bold;
     cursor: pointer;
   }
+
+  .calendar-cell.seed-day:hover {
+    background: #a5d6a7;
+    transform: scale(1.05);
+  }
 </style>
+
 
 <script>
   function updateCalendario() {
@@ -46,11 +61,13 @@
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth();
-    const firstDay = new Date(year, month, 1).getDay();
+
+    const firstDay = new Date(year, month, 1).getDay(); // giorno della settimana (0=Dom)
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
     const savedDates = JSON.parse(localStorage.getItem('seedDates')) || [];
 
+    // Aggiungi celle vuote per i giorni prima del primo del mese
     for (let i = 0; i < firstDay; i++) {
       const cell = document.createElement('div');
       grid.appendChild(cell);
@@ -58,20 +75,27 @@
 
     for (let day = 1; day <= daysInMonth; day++) {
       const cell = document.createElement('div');
-      const fullDate = `${day.toString().padStart(2, '0')}/${(month+1).toString().padStart(2, '0')}/${year}`;
+      const paddedDay = day.toString().padStart(2, '0');
+      const paddedMonth = (month + 1).toString().padStart(2, '0');
+      const fullDate = `${paddedDay}/${paddedMonth}/${year}`;
+
       cell.classList.add('calendar-cell');
       cell.textContent = day;
 
+      // Cerca se la data è salvata
       const foundIndex = savedDates.findIndex(date => date && date.includes(fullDate));
-      if (foundIndex !== -1) {
+
+      if (foundIndex !== -1 && seeds && seeds[foundIndex]) {
+        const seed = seeds[foundIndex];
         cell.classList.add('seed-day');
-        cell.textContent = `${day} ${seeds[foundIndex].emoji}`;
-        cell.title = seeds[foundIndex].titolo;
+        cell.textContent = `${day} ${seed.emoji || '🌱'}`;
+        cell.title = seed.titolo || 'Scoperta';
         cell.onclick = () => {
           currentEntry = foundIndex;
           updateDiario();
-        }
+        };
       }
+
       grid.appendChild(cell);
     }
   }
