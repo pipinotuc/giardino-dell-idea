@@ -1,0 +1,20 @@
+function updateDiario() {
+  const diario = document.getElementById('diario-content');
+  if (!diario || !seeds[currentEntry]) return;
+
+  const seme = seeds[currentEntry];
+  const data = seedDates[currentEntry] || '📅 data non disponibile';
+
+  diario.innerHTML = `
+    <h3>${seme.emoji} ${seme.titolo}</h3>
+    <p>${seme.descrizione}</p>
+    <p class="diario-data">${data}</p>
+  `;
+
+  if (seme.bonus) {
+    const bonus = document.createElement('p');
+    bonus.textContent = seme.bonus;
+    bonus.className = 'bonus-speciale';
+    diario.appendChild(bonus);
+  }
+}
