@@ -1,0 +1,100 @@
+<div id="pannello-musica">
+  <button id="toggle-panel" onclick="togglePannelloMusica()">🎧</button>
+  <div id="contenuto-musica">
+    <label>
+      <input type="checkbox" id="music-toggle" onchange="toggleMusic()"> 🎵 Musica attiva
+    </label>
+    <label style="display:block; margin-top: 10px;">
+      Volume: <input type="range" id="music-volume" min="0" max="1" step="0.01">
+    </label>
+  </div>
+</div>
+
+<audio id="bg-music" loop preload="auto">
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_d91b9c9395.mp3" type="audio/mpeg">
+</audio>
+
+
+<style>
+#pannello-musica {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #f1f8e9;
+  border: 2px solid #aed581;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 10px;
+  z-index: 1000;
+  font-family: 'Segoe UI', sans-serif;
+  transition: all 0.3s ease;
+}
+
+#toggle-panel {
+  background: #8bc34a;
+  border: none;
+  color: white;
+  font-size: 1.2em;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+}
+
+#contenuto-musica {
+  display: none;
+  margin-top: 10px;
+  text-align: left;
+  font-size: 0.95em;
+}
+
+#contenuto-musica label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+#pannello-musica.aperto #contenuto-musica {
+  display: block;
+}
+</style>
+
+<script>
+const music = document.getElementById('bg-music');
+const toggle = document.getElementById('music-toggle');
+const volumeSlider = document.getElementById('music-volume');
+const pannello = document.getElementById('pannello-musica');
+
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('musicEnabled');
+  const savedVolume = localStorage.getItem('musicVolume');
+
+  const isEnabled = saved === null ? true : saved === 'true';
+  toggle.checked = isEnabled;
+
+  volumeSlider.value = savedVolume !== null ? savedVolume : 0.5;
+  music.volume = volumeSlider.value;
+
+  if (isEnabled) {
+    music.play().catch(() => {});
+  }
+});
+
+function toggleMusic() {
+  const enabled = toggle.checked;
+  localStorage.setItem('musicEnabled', enabled);
+  if (enabled) {
+    music.play().catch(() => {});
+  } else {
+    music.pause();
+  }
+}
+
+volumeSlider.addEventListener('input', () => {
+  music.volume = volumeSlider.value;
+  localStorage.setItem('musicVolume', volumeSlider.value);
+});
+
+function togglePannelloMusica() {
+  pannello.classList.toggle('aperto');
+}
+</script>
