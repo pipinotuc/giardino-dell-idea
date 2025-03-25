@@ -1,0 +1,10 @@
+window.onload = () => {
+  const box = document.getElementById('seed-content');
+  while (planted < seeds.length) {
+    box.textContent = seeds[planted];
+    planted++;
+    localStorage.setItem('plantedSeeds', planted);
+  }
+  updateDiario();
+  box.textContent = "Tutti i semi sono stati piantati automaticamente! 🌱";
+}
