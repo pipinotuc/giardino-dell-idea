@@ -1,104 +1,130 @@
 <div class="calendario">
   <h2>📅 Calendario delle Scoperte</h2>
+  <div id="calendar-days"></div>
   <div id="calendar-grid"></div>
 </div>
 
+
 <style>
-  .calendario {
-    width: 90%;
-    max-width: 600px;
-    background: #e3f2fd;
-    border: 2px solid #64b5f6;
-    border-radius: 12px;
-    padding: 16px;
-    margin: 30px auto 0;
-    box-shadow: 0 4px 8px rgba(100, 181, 246, 0.2);
-    font-family: 'Segoe UI', sans-serif;
-  }
+.calendario {
+  width: 90%;
+  max-width: 600px;
+  background: #e3f2fd;
+  border: 2px solid #64b5f6;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 30px auto;
+  box-shadow: 0 4px 10px rgba(100, 181, 246, 0.2);
+  font-family: 'Segoe UI', sans-serif;
+}
 
-  .calendario h2 {
-    margin-top: 0;
-    color: #1976d2;
-    text-align: center;
-    font-size: 1.4em;
-  }
+.calendario h2 {
+  margin-top: 0;
+  color: #1976d2;
+  text-align: center;
+  font-size: 1.4em;
+}
 
-  #calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
-    text-align: center;
-  }
+#calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: bold;
+  color: #1976d2;
+  margin-bottom: 8px;
+}
 
-  .calendar-cell {
-    padding: 8px;
-    background: #ffffff;
-    border-radius: 6px;
-    border: 1px solid #90caf9;
-    min-height: 42px;
-    font-size: 1em;
-    transition: background 0.3s, transform 0.2s;
-  }
+#calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  text-align: center;
+}
 
-  .calendar-cell.seed-day {
-    background: #c8e6c9;
-    font-weight: bold;
-    cursor: pointer;
-  }
+.calendar-cell {
+  padding: 8px;
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #90caf9;
+  min-height: 42px;
+  font-size: 1em;
+  transition: background 0.3s, transform 0.2s;
+}
 
-  .calendar-cell.seed-day:hover {
-    background: #a5d6a7;
-    transform: scale(1.05);
-  }
+.calendar-cell.seed-day {
+  background: #c8e6c9;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.calendar-cell.seed-day:hover {
+  background: #a5d6a7;
+  transform: scale(1.05);
+}
 </style>
 
 
 <script>
-  function updateCalendario() {
-    const grid = document.getElementById('calendar-grid');
-    grid.innerHTML = '';
+function updateCalendario() {
+  const grid = document.getElementById('calendar-grid');
+  const daysRow = document.getElementById('calendar-days');
+  grid.innerHTML = '';
+  daysRow.innerHTML = '';
 
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth();
+  const daysOfWeek = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
+  daysOfWeek.forEach(g => {
+    const cell = document.createElement('div');
+    cell.textContent = g;
+    daysRow.appendChild(cell);
+  });
 
-    const firstDay = new Date(year, month, 1).getDay(); // giorno della settimana (0=Dom)
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
 
-    const savedDates = JSON.parse(localStorage.getItem('seedDates')) || [];
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    // Aggiungi celle vuote per i giorni prima del primo del mese
-    for (let i = 0; i < firstDay; i++) {
-      const cell = document.createElement('div');
-      grid.appendChild(cell);
-    }
+  const seedDates = JSON.parse(localStorage.getItem('seedDates')) || [];
 
-    for (let day = 1; day <= daysInMonth; day++) {
-      const cell = document.createElement('div');
-      const paddedDay = day.toString().padStart(2, '0');
-      const paddedMonth = (month + 1).toString().padStart(2, '0');
-      const fullDate = `${paddedDay}/${paddedMonth}/${year}`;
+  // Sposta il primo giorno (JS: Dom=0 → Lun=0)
+  const offset = firstDay === 0 ? 6 : firstDay - 1;
 
-      cell.classList.add('calendar-cell');
-      cell.textContent = day;
-
-      // Cerca se la data è salvata
-      const foundIndex = savedDates.findIndex(date => date && date.includes(fullDate));
-
-      if (foundIndex !== -1 && seeds && seeds[foundIndex]) {
-        const seed = seeds[foundIndex];
-        cell.classList.add('seed-day');
-        cell.textContent = `${day} ${seed.emoji || '🌱'}`;
-        cell.title = seed.titolo || 'Scoperta';
-        cell.onclick = () => {
-          currentEntry = foundIndex;
-          updateDiario();
-        };
-      }
-
-      grid.appendChild(cell);
-    }
+  for (let i = 0; i < offset; i++) {
+    grid.appendChild(document.createElement('div'));
   }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const cell = document.createElement('div');
+    const paddedDay = day.toString().padStart(2, '0');
+    const paddedMonth = (month + 1).toString().padStart(2, '0');
+    const fullDate = `${paddedDay}/${paddedMonth}/${year}`;
+
+    cell.classList.add('calendar-cell');
+    cell.textContent = day;
+
+    const foundIndex = seedDates.findIndex(d => d && d.includes(fullDate));
+
+    if (foundIndex !== -1 && seeds && seeds[foundIndex]) {
+      const seed = seeds[foundIndex];
+      cell.classList.add('seed-day');
+      cell.textContent = `${day} ${seed.emoji || '🌱'}`;
+      let tooltip = seed.titolo || 'Scoperta';
+      if (seed.bonus) tooltip += `\n⭐ ${seed.bonus}`;
+      cell.title = tooltip;
+      cell.onclick = () => {
+        currentEntry = foundIndex;
+        updateDiario();
+        document.getElementById('diario-content').scrollIntoView({ behavior: 'smooth' });
+      };
+    }
+
+    grid.appendChild(cell);
+  }
+}
+updateCalendario();
+</script>
+
 
   updateCalendario();
 </script>
