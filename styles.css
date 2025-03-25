@@ -1,3 +1,17 @@
+  :root {
+    --main-color: #333;
+    --secondary-color: #666;
+    --font-family: 'Arial', sans-serif;
+  }
+
+
+  body {
+    color: var(--main-color);
+    font-family: var(--font-family);
+  }
+
+
+
 <style>
   body {
     background-image: linear-gradient(to top, #d0f0c0, #a8e6ff);
