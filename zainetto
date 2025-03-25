@@ -1,0 +1,66 @@
+<div class="zainetto">
+  <h2>🎒 Zainetto delle Idee Raccolte</h2>
+  <ul id="zainetto-list"></ul>
+</div>
+
+<style>
+  .zainetto {
+    width: 90%;
+    max-width: 600px;
+    background: #fff8dc;
+    border: 2px solid #e6ce9e;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 30px;
+  }
+  .zainetto h2 {
+    margin-top: 0;
+    color: #b16b00;
+  }
+  .zainetto li {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #fff3d1;
+    border-radius: 8px;
+  }
+  .zainetto textarea {
+    width: 100%;
+    margin-top: 5px;
+    padding: 6px;
+    font-family: inherit;
+    font-size: 0.95em;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    resize: vertical;
+  }
+</style>
+
+<script>
+  function updateZainetto() {
+    const zainetto = document.getElementById('zainetto-list');
+    zainetto.innerHTML = '';
+    const savedNotes = JSON.parse(localStorage.getItem('zainettoNotes')) || [];
+
+    for (let i = 0; i < planted && i < seeds.length; i++) {
+      const li = document.createElement('li');
+      const label = document.createElement('label');
+      label.innerHTML = `<strong>${seeds[i].emoji} ${seeds[i].titolo}</strong> — ${seeds[i].attivita}`;
+
+      const textarea = document.createElement('textarea');
+      textarea.rows = 2;
+      textarea.placeholder = 'Scrivi la tua idea o risposta...';
+      textarea.value = savedNotes[i] || '';
+      textarea.oninput = () => {
+        savedNotes[i] = textarea.value;
+        localStorage.setItem('zainettoNotes', JSON.stringify(savedNotes));
+      };
+
+      li.appendChild(label);
+      li.appendChild(textarea);
+      zainetto.appendChild(li);
+    }
+  }
+
+  // Chiamiamo updateZainetto nei punti giusti
+  updateZainetto();
+</script>
