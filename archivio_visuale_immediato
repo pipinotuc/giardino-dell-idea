@@ -1,0 +1,50 @@
+<div id="seed-content">
+  <!-- Lista semi comparirà qui -->
+</div>
+
+
+window.onload = () => {
+  const box = document.getElementById('seed-content');
+  const diario = updateDiario || (() => {});
+
+  let planted = parseInt(localStorage.getItem('plantedSeeds')) || 0;
+
+  // Se già piantati tutti
+  if (planted >= seeds.length) {
+    box.innerHTML = "<p>🌞 Tutti i semi sono già stati piantati!</p>";
+    showSeeds(seeds.length);
+    diario();
+    return;
+  }
+
+  // Piantagione immediata e visiva
+  const newList = document.createElement('ul');
+  newList.style.listStyle = 'none';
+  newList.style.padding = 0;
+
+  for (; planted < seeds.length; planted++) {
+    const seed = seeds[planted];
+    const li = document.createElement('li');
+    li.textContent = `${seed.emoji || '🌱'} ${seed.titolo || seed}`;
+    newList.appendChild(li);
+  }
+
+  localStorage.setItem('plantedSeeds', planted);
+  diario();
+
+  box.innerHTML = "<p>Tutti i semi sono stati piantati automaticamente! 🌱</p>";
+  box.appendChild(newList);
+};
+
+
+<style>
+  #seed-content ul li {
+    margin: 6px 0;
+    padding: 6px 10px;
+    background-color: #f1f8e9;
+    border-left: 4px solid #81c784;
+    border-radius: 6px;
+    font-size: 1.05em;
+  }
+</style>
+
