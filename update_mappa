@@ -50,3 +50,11 @@ function updateMappa() {
     map.appendChild(ramo);
   }
 }
+
+
+.ramo li small {
+  display: block;
+  color: #6a1b9a;
+  font-size: 0.85em;
+  margin-top: 4px;
+}
