@@ -1,0 +1,52 @@
+function updateMappa() {
+  const map = document.getElementById('knowledge-map');
+  map.innerHTML = '';
+
+  const rami = {};
+  for (const cat in categorie) rami[cat] = [];
+
+  const datePiantate = JSON.parse(localStorage.getItem('seedDates')) || [];
+
+  for (let i = 0; i < planted && i < seeds.length; i++) {
+    const seme = seeds[i];
+    const data = datePiantate[i] || 'data sconosciuta';
+
+    let trovato = false;
+    for (const cat in categorie) {
+      if (categorie[cat].includes(seme.emoji)) {
+        rami[cat].push({ ...seme, index: i, data });
+        trovato = true;
+        break;
+      }
+    }
+
+    if (!trovato) {
+      rami["Altro"].push({ ...seme, index: i, data });
+    }
+  }
+
+  for (const cat in rami) {
+    if (rami[cat].length === 0) continue;
+
+    const ramo = document.createElement('div');
+    ramo.className = 'ramo';
+
+    const h3 = document.createElement('h3');
+    h3.textContent = cat;
+
+    const ul = document.createElement('ul');
+
+    rami[cat].forEach(s => {
+      const li = document.createElement('li');
+      li.classList.add('seme-link');
+      li.title = `Piantato il ${s.data}`;
+      li.innerHTML = `${s.emoji} <strong>${s.titolo}</strong><br><small>📅 ${s.data}</small>`;
+      li.addEventListener('click', () => vaiASeme(s.index));
+      ul.appendChild(li);
+    });
+
+    ramo.appendChild(h3);
+    ramo.appendChild(ul);
+    map.appendChild(ramo);
+  }
+}
