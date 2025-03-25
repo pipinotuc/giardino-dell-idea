@@ -1,20 +1,62 @@
-// Rimuoviamo ogni limite giornaliero alla funzione plantSeed
+function isSemeSpeciale(index) {
+  return (index + 1) % 10 === 0; // ogni 10° seme
+}
+
+
 function plantSeed() {
   const box = document.getElementById('seed-content');
-  if (planted < seeds.length) {
-    box.textContent = `${seeds[planted].emoji} ${seeds[planted].titolo}: '${seeds[planted].descrizione}'`;
-    const today = new Date().toLocaleDateString('it-IT');
-    seedDates[planted] = `📅 ${today}`;
-    planted++;
-    localStorage.setItem('plantedSeeds', planted);
-    localStorage.setItem('seedDates', JSON.stringify(seedDates));
-    currentEntry = planted - 1;
-    updateDiario();
-    updateTree();
-    updateCalendario();
-    updateMappa();
-    updateZainetto();
+
+  // Controllo: semi disponibili?
+  if (planted >= seeds.length) {
+    box.textContent = "🌸 Tutti i semi sono già stati piantati!";
+    return;
+  }
+
+function plantSeed() {
+  const box = document.getElementById('seed-content');
+
+  if (planted >= seeds.length) {
+    box.textContent = "🌸 Tutti i semi sono già stati piantati!";
+    return;
+  }
+
+  const seme = seeds[planted];
+  const oggi = new Date().toLocaleDateString('it-IT');
+  const isSpecial = isSemeSpeciale(planted);
+
+  // Messaggio normale o speciale
+  const messaggio = isSpecial
+    ? `🌟 Seme Speciale! ${seme.emoji} ${seme.titolo}: “${seme.descrizione}” 🌟`
+    : `${seme.emoji} ${seme.titolo}: “${seme.descrizione}”`;
+
+  box.textContent = messaggio;
+
+  // Salva data
+  seedDates[planted] = `📅 ${oggi}`;
+  localStorage.setItem('seedDates', JSON.stringify(seedDates));
+
+  // Avanza
+  planted++;
+  localStorage.setItem('plantedSeeds', planted);
+
+  currentEntry = planted - 1;
+
+  // Aggiorna tutte le sezioni
+  updateDiario();
+  updateTree();
+  updateCalendario();
+  updateMappa();
+  updateZainetto();
+
+  // Bonus: animazione o suono speciale
+  if (isSpecial) {
+    playSound('special'); // opzionale
+    animateSpecialSeed();
   } else {
-    box.textContent = "Tutti i semi sono stati piantati! 🌸";
+    playSound('seme'); // opzionale
   }
 }
+
+
+<audio id="seme" src="suoni/pop.mp3" preload="auto"></audio>
+
