@@ -1,32 +1,178 @@
 <div class="zainetto">
   <h2>🎒 Zainetto delle Idee Raccolte</h2>
-  <button onclick="stampaZainetto()" style="margin-bottom: 15px; background-color: #b16b00; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 1em;">📄 Stampa o Salva in PDF</button>
+
+  <input type="text" id="filtro-zainetto" placeholder="🔍 Cerca tra i semi..." oninput="filtraZainetto()" style="width: 100%; padding: 8px; margin: 10px 0; border-radius: 6px; border: 1px solid #ccc;" />
+
+  <div class="zainetto-btns">
+    <button onclick="stampaZainetto()">📄 Stampa / PDF</button>
+    <button onclick="esportaTxt()">📁 Esporta .txt</button>
+    <button onclick="esportaJson()">🧾 Esporta .json</button>
+  </div>
+
   <ul id="zainetto-list"></ul>
 </div>
 
+<style>
+.zainetto {
+  width: 90%;
+  max-width: 700px;
+  background: #fff8e1;
+  border: 2px solid #fbc02d;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 40px auto;
+  box-shadow: 0 4px 10px rgba(251, 192, 45, 0.2);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.zainetto h2 {
+  color: #ef6c00;
+  text-align: center;
+}
+
+.zainetto-btns {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.zainetto button {
+  padding: 8px 16px;
+  background: #ef6c00;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s;
+}
+
+.zainetto button:hover {
+  background: #e65100;
+}
+
+#zainetto-list li {
+  background: #fff3e0;
+  border-left: 4px solid #ffb300;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.badge-speciale {
+  display: inline-block;
+  background: #ffe082;
+  color: #bf360c;
+  font-size: 0.85em;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-left: 8px;
+}
+</style>
+
 <script>
-  function stampaZainetto() {
-    const printWindow = window.open('', '_blank');
-    const savedNotes = JSON.parse(localStorage.getItem('zainettoNotes')) || [];
+function updateZainetto() {
+  const lista = document.getElementById('zainetto-list');
+  const filtro = document.getElementById('filtro-zainetto').value.toLowerCase();
+  const savedNotes = JSON.parse(localStorage.getItem('zainettoNotes')) || [];
 
-    let html = `<html><head><title>Zainetto delle Idee</title><style>
-      body { font-family: Comic Sans MS, sans-serif; padding: 20px; background: #fff8dc; }
-      h1 { color: #b16b00; }
-      .seme { margin-bottom: 15px; background: #fff3d1; padding: 10px; border-radius: 8px; }
-      .seme h3 { margin: 0 0 5px; }
-    </style></head><body><h1>🎒 Zainetto delle Idee Raccolte</h1>`;
+  lista.innerHTML = '';
 
-    for (let i = 0; i < planted && i < seeds.length; i++) {
-      html += `<div class="seme">
-        <h3>${seeds[i].emoji} ${seeds[i].titolo}</h3>
-        <p><strong>Attività:</strong> ${seeds[i].attivita}</p>
-        <p><strong>Risposta:</strong><br>${(savedNotes[i] || '').replace(/\n/g, '<br>')}</p>
-      </div>`;
-    }
+  for (let i = 0; i < planted && i < seeds.length; i++) {
+    const seed = seeds[i];
+    const testo = savedNotes[i] || '';
+    const titolo = seed.titolo || '';
+    const attività = seed.attivita || '';
+    const bonus = seed.bonus || '';
+    const descrizione = seed.descrizione || '';
 
-    html += `</body></html>`;
-    printWindow.document.write(html);
-    printWindow.document.close();
-    printWindow.print();
+    const contenutoTesto = `${titolo} ${attività} ${testo} ${bonus} ${descrizione}`.toLowerCase();
+    if (!contenutoTesto.includes(filtro)) continue;
+
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <strong>${seed.emoji} ${titolo}</strong>
+      ${seed.bonus ? '<span class="badge-speciale">🌟 Seme Speciale</span>' : ''}
+      <br><em>${attività}</em>
+      <p>${testo.replace(/\n/g, "<br>") || '<em>(nessuna risposta)</em>'}</p>
+    `;
+    lista.appendChild(li);
   }
+}
+
+function filtraZainetto() {
+  updateZainetto();
+}
+
+function stampaZainetto() {
+  const printWindow = window.open('', '_blank');
+  const savedNotes = JSON.parse(localStorage.getItem('zainettoNotes')) || [];
+
+  let html = `<html><head><title>Zainetto</title><style>
+    body { font-family: 'Segoe UI'; padding: 30px; background: #fff8e1; }
+    h1 { color: #ef6c00; text-align: center; }
+    .seme { background: #fff3e0; padding: 12px; margin-bottom: 15px; border-left: 4px solid #fbc02d; border-radius: 10px; }
+    .bonus { background: #fffde7; border-left: 4px solid #fbc02d; padding: 6px 10px; border-radius: 6px; font-style: italic; margin-top: 10px; color: #bf360c; }
+  </style></head><body><h1>🎒 Zainetto delle Idee</h1>`;
+
+  for (let i = 0; i < planted && i < seeds.length; i++) {
+    const s = seeds[i];
+    const r = savedNotes[i] || '';
+    html += `<div class="seme">
+      <h3>${s.emoji} ${s.titolo}</h3>
+      <p><strong>Attività:</strong> ${s.attivita}</p>
+      <p><strong>Risposta:</strong><br>${r.replace(/\n/g, "<br>")}</p>
+      ${s.bonus ? `<p class="bonus">🌟 ${s.bonus}</p>` : ''}
+    </div>`;
+  }
+
+  html += `</body></html>`;
+  printWindow.document.write(html);
+  printWindow.document.close();
+  setTimeout(() => printWindow.print(), 300);
+}
+
+function esportaTxt() {
+  const savedNotes = JSON.parse(localStorage.getItem('zainettoNotes')) || [];
+  let txt = `🎒 Zainetto delle Idee\n\n`;
+
+  for (let i = 0; i < planted && i < seeds.length; i++) {
+    const s = seeds[i];
+    const r = savedNotes[i] || '';
+    txt += `${s.emoji} ${s.titolo}\nAttività: ${s.attivita}\nRisposta: ${r}\n`;
+    if (s.bonus) txt += `⭐ Bonus: ${s.bonus}\n`;
+    txt += `\n---\n\n`;
+  }
+
+  const blob = new Blob([txt], { type: 'text/plain' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'zainetto.txt';
+  link.click();
+}
+
+function esportaJson() {
+  const savedNotes = JSON.parse(localStorage.getItem('zainettoNotes')) || [];
+  const dati = [];
+
+  for (let i = 0; i < planted && i < seeds.length; i++) {
+    dati.push({
+      emoji: seeds[i].emoji,
+      titolo: seeds[i].titolo,
+      attivita: seeds[i].attivita,
+      descrizione: seeds[i].descrizione,
+      risposta: savedNotes[i] || '',
+      bonus: seeds[i].bonus || null
+    });
+  }
+
+  const blob = new Blob([JSON.stringify(dati, null, 2)], { type: 'application/json' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'zainetto.json';
+  link.click();
+}
 </script>
+
