@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Il Giardino dell'Idea</title>
+  <style>
+    body {
+      font-family: Comic Sans MS, cursive, sans-serif;
+      background-color: #e8fce8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      color: #4caf50;
+    }
+    .garden {
+      border: 5px dashed #4caf50;
+      background: #fff;
+      width: 300px;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    #seed-content {
+      font-size: 1.2em;
+      color: #333;
+      text-align: center;
+      padding: 10px;
+    }
+    button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    button:hover {
+      background-color: #388e3c;
+    }
+  </style>
+</head>
+<body>
+  <h1>Il Giardino dell'Idea</h1>
+  <div class="garden">
+    <div id="seed-content">Pianta un seme per scoprire un'idea!</div>
+  </div>
+  <button onclick="plantSeed()">🌱 Pianta un Seme</button>
+
+  <script>
+    const seeds = [
+      "🌾 Seme del Grano Dorato: 'Luce da mangiare!'",
+      "🌽 Seme del Mais Saltellante: 'POPcorn ballerino!'",
+      "🤍 Seme dell'Avena Soffice: 'Ama le coccole nel latte!'",
+      "⚪ Seme del Riso Viaggiatore: 'Con lo zainetto esploratore!'",
+      "🟤 Seme del Farro Antico: 'Il preferito dei gladiatori!'",
+      "🍓 Seme della Fragola Canterina: 'Canta mentre cresce!'",
+      "💛 Seme della Banana Scivolosa: 'La più simpatica del giardino!'",
+      "🍎 Seme della Mela Saggia: 'Ogni seme è una biblioteca!'",
+      "💜 Seme dell'Uva Curiosa: 'Ogni acino fa una domanda!'",
+      "🍍 Seme dell'Ananas Esploratore: 'Viaggia con la bussola di foglie!'",
+      "🌻 Seme del Girasole Ridente: 'Fa il solletico al sole!'",
+      "🌹 Seme della Rosa Timida: 'Arrossisce se la guardi!'",
+      "🤍 Seme della Margherita Pensierosa: 'Ogni petalo ha un pensiero diverso'",
+      "💜 Seme della Lavanda dei Sogni: 'Porta sogni profumati e sereni'",
+      "🔴 Seme del Papavero Ribelle: 'Cresce dove vuole, anche in città!'"
+    ];
+
+    let planted = parseInt(localStorage.getItem('plantedSeeds')) || 0;
+
+    function plantSeed() {
+      const box = document.getElementById('seed-content');
+      if (planted < seeds.length) {
+        box.textContent = seeds[planted];
+        planted++;
+        localStorage.setItem('plantedSeeds', planted);
+      } else {
+        box.textContent = "Tutti i semi di oggi sono stati piantati! Torna domani! 🌞";
+      }
+    }
+
+    // Visualizza l'ultimo seme piantato se rientri nella sessione
+    window.onload = () => {
+      const box = document.getElementById('seed-content');
+      if (planted > 0 && planted <= seeds.length) {
+        box.textContent = seeds[planted - 1];
+      } else if (planted > seeds.length) {
+        box.textContent = "Tutti i semi di oggi sono stati piantati! Torna domani! 🌞";
+      }
+    }
+  </script>
+</body>
+</html>
