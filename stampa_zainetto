@@ -1,0 +1,32 @@
+<div class="zainetto">
+  <h2>🎒 Zainetto delle Idee Raccolte</h2>
+  <button onclick="stampaZainetto()" style="margin-bottom: 15px; background-color: #b16b00; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 1em;">📄 Stampa o Salva in PDF</button>
+  <ul id="zainetto-list"></ul>
+</div>
+
+<script>
+  function stampaZainetto() {
+    const printWindow = window.open('', '_blank');
+    const savedNotes = JSON.parse(localStorage.getItem('zainettoNotes')) || [];
+
+    let html = `<html><head><title>Zainetto delle Idee</title><style>
+      body { font-family: Comic Sans MS, sans-serif; padding: 20px; background: #fff8dc; }
+      h1 { color: #b16b00; }
+      .seme { margin-bottom: 15px; background: #fff3d1; padding: 10px; border-radius: 8px; }
+      .seme h3 { margin: 0 0 5px; }
+    </style></head><body><h1>🎒 Zainetto delle Idee Raccolte</h1>`;
+
+    for (let i = 0; i < planted && i < seeds.length; i++) {
+      html += `<div class="seme">
+        <h3>${seeds[i].emoji} ${seeds[i].titolo}</h3>
+        <p><strong>Attività:</strong> ${seeds[i].attivita}</p>
+        <p><strong>Risposta:</strong><br>${(savedNotes[i] || '').replace(/\n/g, '<br>')}</p>
+      </div>`;
+    }
+
+    html += `</body></html>`;
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.print();
+  }
+</script>
