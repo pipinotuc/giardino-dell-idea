@@ -1,0 +1,21 @@
+window.onload = () => {
+  const box = document.getElementById('seed-content');
+  updateDiario();
+  
+  if (planted >= seeds.length) {
+    box.textContent = "Tutti i semi sono già stati piantati! 🌞";
+    return;
+  }
+
+  const interval = setInterval(() => {
+    if (planted < seeds.length) {
+      box.textContent = seeds[planted];
+      planted++;
+      localStorage.setItem('plantedSeeds', planted);
+      updateDiario();
+    } else {
+      clearInterval(interval);
+      box.textContent = "Tutti i semi sono stati piantati! 🌱";
+    }
+  }, 1000); // 1 secondo tra un seme e l’altro
+}
