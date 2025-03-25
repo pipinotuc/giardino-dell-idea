@@ -1,7 +1,7 @@
 <div class="garden">
   <div id="tree-visual">
-    <div class="tree-trunk">🟫</div>
     <div class="tree-growth" id="tree-growth"></div>
+    <div class="tree-trunk">🟫</div>
   </div>
 </div>
 
@@ -10,35 +10,59 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
+    margin-top: 20px;
   }
+
   .tree-trunk {
-    font-size: 2em;
+    font-size: 2.5em;
+    margin-top: 5px;
   }
+
+  .tree-growth {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 260px;
+    margin-bottom: 5px;
+  }
+
   .tree-growth span {
-    font-size: 1.5em;
-    animation: pop 0.3s ease;
+    font-size: 1.8em;
+    animation: pop 0.4s ease;
     display: inline-block;
-    margin: 2px;
+    margin: 3px;
+    transition: transform 0.2s;
   }
+
+  .tree-growth span:hover {
+    transform: scale(1.2);
+    cursor: default;
+  }
+
   @keyframes pop {
-    0% { transform: scale(0.2); opacity: 0; }
+    0% { transform: scale(0.3); opacity: 0; }
     100% { transform: scale(1); opacity: 1; }
   }
 </style>
 
-<script>
-  function updateTree() {
-    const tree = document.getElementById('tree-growth');
-    tree.innerHTML = '';
-    for (let i = 0; i < planted; i++) {
-      const piece = document.createElement('span');
-      piece.textContent = ['🍃','🍂','🍏','🍒','🌿','🌸'][i % 6];
-      tree.appendChild(piece);
-    }
-  }
-</script>
+function updateTree() {
+  const tree = document.getElementById('tree-growth');
+  tree.innerHTML = '';
 
-// Chiama updateTree() alla fine di updateDiario()
-updateDiario();
-updateTree();
+  const foglie = ['🍃', '🍂', '🍏', '🍒', '🌿', '🌸'];
+
+  for (let i = 0; i < planted; i++) {
+    const foglia = document.createElement('span');
+    foglia.textContent = foglie[i % foglie.length];
+    tree.appendChild(foglia);
+  }
+}
+
+
+if (planted >= seeds.length) {
+  const trunk = document.querySelector('.tree-trunk');
+  trunk.textContent = '🌳'; // o aggiungi un’animazione
+}
+
+
