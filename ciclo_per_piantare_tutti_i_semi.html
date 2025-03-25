@@ -1,10 +1,28 @@
 window.onload = () => {
   const box = document.getElementById('seed-content');
-  while (planted < seeds.length) {
-    box.textContent = seeds[planted];
-    planted++;
-    localStorage.setItem('plantedSeeds', planted);
+  const diario = updateDiario || (() => {});
+
+  let planted = parseInt(localStorage.getItem('plantedSeeds')) || 0;
+
+  if (planted >= seeds.length) {
+    box.textContent = "Tutti i semi sono già stati piantati! 🌞";
+    diario();
+    return;
   }
-  updateDiario();
-  box.textContent = "Tutti i semi sono stati piantati automaticamente! 🌱";
-}
+
+  box.textContent = `${seed.emoji || '🌱'} ${seed.titolo || ''}`;
+
+
+  const interval = setInterval(() => {
+    if (planted < seeds.length) {
+      const seed = seeds[planted];
+      box.textContent = `🌱 ${seed}`;
+      planted++;
+      localStorage.setItem('plantedSeeds', planted);
+      diario();
+    } else {
+      clearInterval(interval);
+      box.textContent = "Tutti i semi sono stati piantati automaticamente! 🌱";
+    }
+  }, 1000);
+};
