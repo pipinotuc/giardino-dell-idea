@@ -79,31 +79,41 @@
 function plantSeed() {
   const box = document.getElementById('seed-content');
 
+  if (typeof seeds === 'undefined' || !Array.isArray(seeds)) {
+    console.error("La variabile 'seeds' non è definita correttamente.");
+    return;
+  }
+
+  if (typeof planted !== 'number') {
+    console.error("La variabile 'planted' non è inizializzata.");
+    return;
+  }
+
   if (planted < seeds.length) {
-    // Mostra il nuovo seme
-    box.textContent = `${seeds[planted].emoji} ${seeds[planted].titolo}: '${seeds[planted].descrizione}'`;
-
-    // Salva la data del seme piantato
+    const seed = seeds[planted];
     const today = new Date().toLocaleDateString('it-IT');
-    seedDates[planted] = `📅 ${today}`;
 
-    // Aggiorna il numero di semi piantati
+    box.textContent = `${seed.emoji} ${seed.titolo}: '${seed.descrizione}'`;
+
+    if (!Array.isArray(seedDates)) seedDates = [];
+    seedDates[planted] = `📅 ${today}`;
     planted++;
+
     localStorage.setItem('plantedSeeds', planted);
     localStorage.setItem('seedDates', JSON.stringify(seedDates));
-
-    // Aggiorna tutto
     currentEntry = planted - 1;
-    updateDiario();
-    updateZainetto();
-    updateTree();
-    updateCalendario();
-    updateMappa();
+
+    // Solo se le funzioni esistono
+    if (typeof updateDiario === 'function') updateDiario();
+    if (typeof updateTree === 'function') updateTree();
+    if (typeof updateZainetto === 'function') updateZainetto();
+    if (typeof updateCalendario === 'function') updateCalendario();
+    if (typeof updateMappa === 'function') updateMappa();
+
   } else {
     box.textContent = "Tutti i semi sono stati piantati! 🌸";
   }
 }
-
     // Visualizza l'ultimo seme piantato se rientri nella sessione
     window.onload = () => {
       const box = document.getElementById('seed-content');
