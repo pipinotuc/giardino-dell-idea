@@ -1,0 +1,107 @@
+<div class="timeline-radice">
+  <h3>🌿 Radici del Sapere</h3>
+  <div id="timeline-container"></div>
+</div>
+
+<style>
+.timeline-radice {
+  margin: 40px auto;
+  padding: 20px;
+  background: #ede7f6;
+  border: 2px solid #9575cd;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 650px;
+  box-shadow: 0 4px 10px rgba(149, 117, 205, 0.2);
+  text-align: center;
+}
+
+.timeline-radice h3 {
+  margin-bottom: 15px;
+  color: #512da8;
+}
+
+#timeline-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.timeline-item {
+  background: #d1c4e9;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  font-size: 1.4em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.timeline-item:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px #9575cd;
+}
+
+.timeline-item::after {
+  content: attr(data-title);
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.85em;
+  background: #fff;
+  color: #4a148c;
+  padding: 4px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.timeline-item:hover::after {
+  opacity: 1;
+}
+</style>
+
+<script>
+function updateTimeline() {
+  const container = document.getElementById('timeline-container');
+  container.innerHTML = '';
+
+  const seedDates = JSON.parse(localStorage.getItem('seedDates')) || [];
+
+  const timeline = [];
+
+  for (let i = 0; i < planted && i < seeds.length; i++) {
+    timeline.push({
+      index: i,
+      emoji: seeds[i].emoji || '🌱',
+      titolo: seeds[i].titolo || 'Seme',
+      data: seedDates[i] || 'data sconosciuta'
+    });
+  }
+
+  // Ordina per data (facoltativo: altrimenti resta ordine di piantagione)
+  // timeline.sort((a, b) => new Date(a.data) - new Date(b.data)); // solo se hai date ISO
+
+  timeline.forEach(s => {
+    const item = document.createElement('div');
+    item.className = 'timeline-item';
+    item.textContent = s.emoji;
+    item.setAttribute('data-title', `${s.titolo} - ${s.data}`);
+    item.addEventListener('click', () => vaiASeme(s.index));
+    container.appendChild(item);
+  });
+}
+</script>
+
+updateMappa();
+updateTimeline();
+
