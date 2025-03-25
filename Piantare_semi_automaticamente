@@ -1,12 +1,25 @@
 window.onload = () => {
   const box = document.getElementById('seed-content');
+
+  // Recupera il numero di semi già piantati dallo storage, oppure parte da 0
+  let planted = parseInt(localStorage.getItem('plantedSeeds')) || 0;
+
+  // Assicurati che "seeds" sia definito e sia un array
+  if (!Array.isArray(seeds) || seeds.length === 0) {
+    box.textContent = "Nessun seme disponibile. 🌾";
+    return;
+  }
+
+  // Aggiorna il diario inizialmente
   updateDiario();
-  
+
+  // Se tutti i semi sono già stati piantati
   if (planted >= seeds.length) {
     box.textContent = "Tutti i semi sono già stati piantati! 🌞";
     return;
   }
 
+  // Intervallo per piantare i semi
   const interval = setInterval(() => {
     if (planted < seeds.length) {
       box.textContent = seeds[planted];
@@ -18,4 +31,5 @@ window.onload = () => {
       box.textContent = "Tutti i semi sono stati piantati! 🌱";
     }
   }, 1000); // 1 secondo tra un seme e l’altro
-}
+};
+
