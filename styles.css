@@ -52,3 +52,13 @@
   <div id="mimi" class="character" title="Mimi la Cupolina">🧚‍♀️</div>
   <div id="ugo" class="character" title="Ugo il Folletto delle Idee">🧝‍♂️</div>
 </div>
+
+
+.tree-growth.falling span {
+  animation: fall 0.6s ease-in forwards;
+}
+
+@keyframes fall {
+  0%   { transform: translateY(0) rotate(0); opacity: 1; }
+  100% { transform: translateY(60px) rotate(90deg); opacity: 0; }
+}
