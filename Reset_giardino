@@ -1,0 +1,34 @@
+<button id="reset-btn" style="background-color:#d32f2f; margin-bottom:40px;">
+  🔄 Ricomincia il Giardino
+</button>
+
+<script>
+  document.getElementById('reset-btn').addEventListener('click', () => {
+    const conferma = confirm(
+      "🌱 Sei sicuro di voler ricominciare da capo il Giardino dell'Idea?\n\nTutti i progressi salvati verranno persi."
+    );
+
+    if (!conferma) return;
+
+    const tree = document.getElementById('tree-growth');
+    const base = document.getElementById('tree-base');
+
+    // Applica animazione di caduta
+    tree.classList.add('falling');
+    base.style.opacity = '0.3';
+
+    // Rimuove i dati e ricarica dopo l’animazione
+    setTimeout(() => {
+      const chiaviDaRimuovere = ['plantedSeeds', 'seedDates'];
+      chiaviDaRimuovere.forEach(chiave => localStorage.removeItem(chiave));
+      location.reload();
+    }, 800); // tempo leggermente più lungo dell'animazione fall
+  });
+</script>
+
+
+    // Ricarica la pagina
+    location.reload();
+  });
+</script>
+
