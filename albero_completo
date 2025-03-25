@@ -1,23 +1,38 @@
 <div class="garden">
   <div id="tree-visual">
-    <div class="tree-base">🌱</div>
+    <div class="tree-base" id="tree-base">🌱</div>
+    <div class="tree-stem">🟫</div>
     <div class="tree-growth" id="tree-growth"></div>
   </div>
 </div>
 
-<style>
-  #tree-visual {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px 0;
-  }
+<!-- Messaggio poetico finale -->
+<div id="messaggio-poetico" style="display:none; margin-top:20px; font-size:1.2em; text-align:center; opacity:0; transition: opacity 1s;">
+  🌸 Il Giardino ha raggiunto la sua armonia. <br>
+  Ogni seme ha dato il suo frutto. <br>
+  <span id="seme-finalizzato" style="font-weight:bold;"></span><br>
+  <span id="data-finalizzata" style="font-style: italic;"></span>
+</div>
 
-  .tree-base {
+<!-- Suono magico -->
+<audio id="magia-audio" src="suoni/magia.mp3" preload="auto"></audio>
+
+
+<style>
+#tree-visual {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+  position: relative;
+}
+
+.tree-base {
   font-size: 2.5em;
-  margin-bottom: 8px;
-  transition: transform 0.3s ease, font-size 0.3s ease;
+  margin-top: 10px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  position: relative;
 }
 
 .tree-base.sprouting {
@@ -32,24 +47,81 @@
   animation: pulse 1.2s ease-in-out infinite;
 }
 
+.tree-base.full-grown::after {
+  content: '✨';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.2em;
+  animation: shine 2s infinite ease-in-out;
+}
+
+.tree-stem {
+  font-size: 1.8em;
+  margin: -5px 0;
+  transform: scaleY(1.4);
+}
+
+.tree-growth {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 280px;
+  margin-bottom: 10px;
+}
+
+.tree-growth span {
+  font-size: 1.8em;
+  animation: pop 0.4s ease;
+  display: inline-block;
+  margin: 4px;
+}
+
+.tree-growth.full-grown span {
+  animation: float 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes pop {
+  0%   { transform: scale(0.3); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes float {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-5px); }
+}
+
 @keyframes pulse {
   0%   { transform: scale(1.2); }
   50%  { transform: scale(1.3); }
   100% { transform: scale(1.2); }
 }
+
+@keyframes shine {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 1; }
+}
 </style>
 
+
 <script>
-  function updateTree() {
+function updateTree() {
   const tree = document.getElementById('tree-growth');
   const base = document.getElementById('tree-base');
+  const messaggio = document.getElementById('messaggio-poetico');
+  const dataText = document.getElementById('data-finalizzata');
+  const semeText = document.getElementById('seme-finalizzato');
+  const audio = document.getElementById('magia-audio');
 
   tree.innerHTML = '';
   tree.classList.remove('full-grown');
-  base.className = 'tree-base'; // Reset classi
+  base.className = 'tree-base';
+  messaggio.style.display = 'none';
+  messaggio.style.opacity = 0;
 
   const visuals = [
-    '🌱', '🌿', '🍃', '🌸', '🍎', '🍒', '🍐', '🍂', '🌼', '🥭'
+    '🌸', '🌼', '🍃', '🌿', '🍎', '🍒', '🍐', '🍂', '🥭', '🌻'
   ];
 
   for (let i = 0; i < Math.min(planted, visuals.length); i++) {
@@ -58,24 +130,40 @@
     tree.appendChild(piece);
   }
 
-  // Evoluzione della base dell'albero
+  // Stato visivo e simbolico della base
   if (planted === 0) {
     base.textContent = '🌱';
   } else if (planted <= 3) {
     base.textContent = '🌿';
     base.classList.add('sprouting');
   } else if (planted <= 6) {
-    base.textContent = '🌳';
+    base.textContent = '🌿';
     base.classList.add('growing');
   } else {
     base.textContent = '🌳';
     base.classList.add('full-grown');
     tree.classList.add('full-grown');
+
+    // Recupera dati salvati
+    const dataUltimoSeme = localStorage.getItem('lastSeedDate') || 'data sconosciuta';
+    const nomeUltimoSeme = localStorage.getItem('lastSeedName') || 'seme misterioso';
+
+    semeText.textContent = `L’ultimo dono è stato: ${nomeUltimoSeme}`;
+    dataText.textContent = `Piantato il ${dataUltimoSeme}.`;
+
+    // Mostra il messaggio
+    setTimeout(() => {
+      messaggio.style.display = 'block';
+      messaggio.style.opacity = 1;
+    }, 400);
+
+    // Riproduce suono magico
+    if (audio) {
+      audio.currentTime = 0;
+      audio.play().catch(e => console.warn("Audio non riprodotto automaticamente:", e));
+    }
   }
 }
-
 </script>
 
-// Alla fine di updateDiario()
-updateDiario();
-updateTree();
+
