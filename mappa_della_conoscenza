@@ -1,0 +1,77 @@
+<div class="mappa">
+  <h2>🗺️ Mappa della Conoscenza</h2>
+  <div id="knowledge-map"></div>
+</div>
+
+<style>
+  .mappa {
+    width: 90%;
+    max-width: 600px;
+    background: #f3e5f5;
+    border: 2px solid #ba68c8;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 30px;
+  }
+  .mappa h2 {
+    margin-top: 0;
+    color: #7b1fa2;
+  }
+  .ramo {
+    margin-bottom: 15px;
+  }
+  .ramo h3 {
+    color: #6a1b9a;
+    margin-bottom: 5px;
+  }
+  .ramo ul {
+    list-style-type: none;
+    padding-left: 15px;
+  }
+  .ramo li {
+    background: #ede7f6;
+    border-radius: 6px;
+    padding: 6px;
+    margin-bottom: 4px;
+  }
+</style>
+
+<script>
+  const categorie = {
+    "Frutta": ["🍎", "🍒", "🍐", "🍍"],
+    "Fiori": ["🌹", "🌻", "🌸", "🌼"],
+    "Cereali": ["🌾", "🌽", "🥖"],
+    "Altro": []
+  };
+
+  function updateMappa() {
+    const map = document.getElementById('knowledge-map');
+    map.innerHTML = '';
+
+    const rami = {};
+    for (const cat in categorie) rami[cat] = [];
+
+    for (let i = 0; i < planted && i < seeds.length; i++) {
+      const seme = seeds[i];
+      let trovato = false;
+      for (const cat in categorie) {
+        if (categorie[cat].includes(seme.emoji)) {
+          rami[cat].push(seme);
+          trovato = true;
+          break;
+        }
+      }
+      if (!trovato) rami["Altro"].push(seme);
+    }
+
+    for (const cat in rami) {
+      if (rami[cat].length === 0) continue;
+      const ramo = document.createElement('div');
+      ramo.className = 'ramo';
+      ramo.innerHTML = `<h3>${cat}</h3><ul>${rami[cat].map(s => `<li>${s.emoji} ${s.titolo}</li>`).join('')}</ul>`;
+      map.appendChild(ramo);
+    }
+  }
+
+  updateMappa();
+</script>
