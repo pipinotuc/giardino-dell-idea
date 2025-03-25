@@ -3,31 +3,107 @@
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_d91b9c9395.mp3" type="audio/mpeg">
   </audio>
 
-  <div id="welcome-screen" style="display:none; text-align:center; max-width:600px;">
-    <img src="https://cdn.pixabay.com/photo/2017/03/01/19/17/tree-2111742_960_720.png" alt="albero delle idee" style="width:200px; margin-bottom: 20px;">
-    <h1 style="color:#4caf50; font-size:2em;">🌱 Benvenuto nel Giardino dell’Idea</h1>
-    <p style="font-size:1.1em; color:#333; margin: 20px 0;">
-      Ogni giorno puoi piantare un seme magico e far crescere il tuo albero delle idee. <br>
+  <!-- Schermata di benvenuto -->
+  <div id="welcome-screen" class="fade" style="display:none;">
+    <img src="https://cdn.pixabay.com/photo/2017/03/01/19/17/tree-2111742_960_720.png" alt="albero delle idee" class="welcome-img">
+    <h1>🌱 Benvenuto nel Giardino dell’Idea</h1>
+    <p>
+      Ogni giorno puoi piantare un seme magico e far crescere il tuo albero delle idee.<br>
       Scopri, sogna, disegna… il giardino cresce con te!
     </p>
-    <button onclick="enterGarden()" style="background-color:#4caf50; font-size:1.2em;">🌼 Entra nel Giardino</button>
+    <button onclick="enterGarden()">🌼 Entra nel Giardino</button>
   </div>
 
-  <div id="garden-interface" style="display:none;">
-    <!-- Tutto il contenuto attuale del giardino va qui -->
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f1f8e9;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  .fade {
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  .fade.show {
+    opacity: 1;
+  }
+
+  #welcome-screen {
+    padding: 40px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .welcome-img {
+    width: 200px;
+    margin-bottom: 20px;
+  }
+
+  #welcome-screen h1 {
+    color: #4caf50;
+    font-size: 2em;
+  }
+
+  #welcome-screen p {
+    font-size: 1.1em;
+    color: #333;
+    margin: 20px 0;
+    line-height: 1.5;
+  }
+
+  #welcome-screen button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1.1em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  #welcome-screen button:hover {
+    background-color: #43a047;
+  }
+</style>
+
+  <!-- Interfaccia principale -->
+  <div id="garden-interface" class="fade" style="display:none;">
+    <!-- Qui va tutto il contenuto del giardino -->
   </div>
 
-  <script>
-    function checkWelcome() {
-      const firstTime = localStorage.getItem('firstVisit') !== 'false';
-      document.getElementById('welcome-screen').style.display = firstTime ? 'block' : 'none';
-      document.getElementById('garden-interface').style.display = firstTime ? 'none' : 'block';
-    }
 
-    function enterGarden() {
-      localStorage.setItem('firstVisit', 'false');
-      document.getElementById('welcome-screen').style.display = 'none';
-      document.getElementById('garden-interface').style.display = 'block';
-      document.getElementById('bg-music').play();
+<script>
+  function checkWelcome() {
+    const firstTime = localStorage.getItem('firstVisit') !== 'false';
+    const welcome = document.getElementById('welcome-screen');
+    const garden = document.getElementById('garden-interface');
+
+    if (firstTime) {
+      welcome.style.display = 'block';
+      setTimeout(() => welcome.classList.add('show'), 50);
+    } else {
+      garden.style.display = 'block';
+      setTimeout(() => garden.classList.add('show'), 50);
+      document.getElementById('bg-music').play().catch(() => {});
     }
-  </script>
+  }
+
+  function enterGarden() {
+    localStorage.setItem('firstVisit', 'false');
+    const welcome = document.getElementById('welcome-screen');
+    const garden = document.getElementById('garden-interface');
+
+    welcome.classList.remove('show');
+    setTimeout(() => {
+      welcome.style.display = 'none';
+      garden.style.display = 'block';
+      setTimeout(() => garden.classList.add('show'), 50);
+      document.getElementById('bg-music').play().catch(() => {});
+    }, 600);
+  }
+</script>
