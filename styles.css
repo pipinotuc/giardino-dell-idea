@@ -62,3 +62,26 @@
   0%   { transform: translateY(0) rotate(0); opacity: 1; }
   100% { transform: translateY(60px) rotate(90deg); opacity: 0; }
 }
+
+
+#diario-content h3 {
+  color: #4e342e;
+  margin-bottom: 5px;
+}
+
+.diario-data {
+  font-style: italic;
+  color: #6d4c41;
+  margin-top: 8px;
+}
+
+.bonus-speciale {
+  margin-top: 12px;
+  padding: 10px;
+  background: #fff3e0;
+  border-left: 4px solid #ffb300;
+  border-radius: 6px;
+  color: #bf360c;
+  font-style: italic;
+  animation: fadeInBonus 0.6s ease-in;
+}
