@@ -1,0 +1,11 @@
+<button onclick="resetGiardino()" style="background-color:#d32f2f; margin-bottom:40px;">🔄 Ricomincia il Giardino</button>
+
+<script>
+  function resetGiardino() {
+    if (confirm("Sei sicuro di voler ricominciare da capo il Giardino dell'Idea? Tutti i progressi verranno persi.")) {
+      localStorage.removeItem('plantedSeeds');
+      localStorage.removeItem('seedDates');
+      location.reload();
+    }
+  }
+</script>
