@@ -1,0 +1,17 @@
+<div style="margin-top: 10px;">
+  <label style="font-size: 0.95em;">
+    <input type="checkbox" id="music-toggle" checked onchange="toggleMusic()"> 🎵 Musica di sottofondo
+  </label>
+</div>
+
+<script>
+  function toggleMusic() {
+    const music = document.getElementById('bg-music');
+    const toggle = document.getElementById('music-toggle');
+    if (toggle.checked) {
+      music.play();
+    } else {
+      music.pause();
+    }
+  }
+</script>
