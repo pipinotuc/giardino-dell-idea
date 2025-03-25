@@ -1,0 +1,37 @@
+<script>
+  function updateMappa() {
+    const map = document.getElementById('knowledge-map');
+    map.innerHTML = '';
+
+    const rami = {};
+    for (const cat in categorie) rami[cat] = [];
+
+    for (let i = 0; i < planted && i < seeds.length; i++) {
+      const seme = seeds[i];
+      let trovato = false;
+      for (const cat in categorie) {
+        if (categorie[cat].includes(seme.emoji)) {
+          rami[cat].push({ ...seme, index: i });
+          trovato = true;
+          break;
+        }
+      }
+      if (!trovato) rami["Altro"].push({ ...seme, index: i });
+    }
+
+    for (const cat in rami) {
+      if (rami[cat].length === 0) continue;
+      const ramo = document.createElement('div');
+      ramo.className = 'ramo';
+      const lista = rami[cat].map(s => `<li onclick="vaiASeme(${s.index})" style="cursor:pointer;">${s.emoji} ${s.titolo}</li>`).join('');
+      ramo.innerHTML = `<h3>${cat}</h3><ul>${lista}</ul>`;
+      map.appendChild(ramo);
+    }
+  }
+
+  function vaiASeme(index) {
+    currentEntry = index;
+    updateDiario();
+    window.scrollTo({ top: document.getElementById('diario-content').offsetTop - 40, behavior: 'smooth' });
+  }
+</script>
