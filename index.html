@@ -76,16 +76,33 @@
 
     let planted = parseInt(localStorage.getItem('plantedSeeds')) || 0;
 
-    function plantSeed() {
-      const box = document.getElementById('seed-content');
-      if (planted < seeds.length) {
-        box.textContent = seeds[planted];
-        planted++;
-        localStorage.setItem('plantedSeeds', planted);
-      } else {
-        box.textContent = "Tutti i semi di oggi sono stati piantati! Torna domani! 🌞";
-      }
-    }
+function plantSeed() {
+  const box = document.getElementById('seed-content');
+
+  if (planted < seeds.length) {
+    // Mostra il nuovo seme
+    box.textContent = `${seeds[planted].emoji} ${seeds[planted].titolo}: '${seeds[planted].descrizione}'`;
+
+    // Salva la data del seme piantato
+    const today = new Date().toLocaleDateString('it-IT');
+    seedDates[planted] = `📅 ${today}`;
+
+    // Aggiorna il numero di semi piantati
+    planted++;
+    localStorage.setItem('plantedSeeds', planted);
+    localStorage.setItem('seedDates', JSON.stringify(seedDates));
+
+    // Aggiorna tutto
+    currentEntry = planted - 1;
+    updateDiario();
+    updateZainetto();
+    updateTree();
+    updateCalendario();
+    updateMappa();
+  } else {
+    box.textContent = "Tutti i semi sono stati piantati! 🌸";
+  }
+}
 
     // Visualizza l'ultimo seme piantato se rientri nella sessione
     window.onload = () => {
