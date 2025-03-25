@@ -1,0 +1,20 @@
+// Rimuoviamo ogni limite giornaliero alla funzione plantSeed
+function plantSeed() {
+  const box = document.getElementById('seed-content');
+  if (planted < seeds.length) {
+    box.textContent = `${seeds[planted].emoji} ${seeds[planted].titolo}: '${seeds[planted].descrizione}'`;
+    const today = new Date().toLocaleDateString('it-IT');
+    seedDates[planted] = `📅 ${today}`;
+    planted++;
+    localStorage.setItem('plantedSeeds', planted);
+    localStorage.setItem('seedDates', JSON.stringify(seedDates));
+    currentEntry = planted - 1;
+    updateDiario();
+    updateTree();
+    updateCalendario();
+    updateMappa();
+    updateZainetto();
+  } else {
+    box.textContent = "Tutti i semi sono stati piantati! 🌸";
+  }
+}
