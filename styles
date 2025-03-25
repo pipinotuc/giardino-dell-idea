@@ -1,0 +1,40 @@
+<style>
+  body {
+    background-image: linear-gradient(to top, #d0f0c0, #a8e6ff);
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .character {
+    position: absolute;
+    z-index: 2;
+    font-size: 2em;
+  }
+  #mimi {
+    top: 80px;
+    left: 30px;
+  }
+  #ugo {
+    bottom: 100px;
+    right: 30px;
+  }
+  .garden-icons {
+    position: relative;
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+</style>
+
+<div class="garden">
+  <div id="tree-visual">
+    <div class="tree-base">🌱</div>
+    <div class="tree-growth" id="tree-growth"></div>
+    <div class="garden-icons">
+      <span>🦋</span>
+      <span>🌼</span>
+      <span>🌟</span>
+    </div>
+  </div>
+  <div id="mimi" class="character" title="Mimi la Cupolina">🧚‍♀️</div>
+  <div id="ugo" class="character" title="Ugo il Folletto delle Idee">🧝‍♂️</div>
+</div>
