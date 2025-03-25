@@ -1,77 +1,118 @@
 <div class="mappa">
   <h2>🗺️ Mappa della Conoscenza</h2>
-  <div id="knowledge-map"></div>
+  <div id="knowledge-map" class="rami-container"></div>
 </div>
 
+
 <style>
-  .mappa {
-    width: 90%;
-    max-width: 600px;
-    background: #f3e5f5;
-    border: 2px solid #ba68c8;
-    border-radius: 10px;
-    padding: 15px;
-    margin-top: 30px;
-  }
-  .mappa h2 {
-    margin-top: 0;
-    color: #7b1fa2;
-  }
-  .ramo {
-    margin-bottom: 15px;
-  }
-  .ramo h3 {
-    color: #6a1b9a;
-    margin-bottom: 5px;
-  }
-  .ramo ul {
-    list-style-type: none;
-    padding-left: 15px;
-  }
-  .ramo li {
-    background: #ede7f6;
-    border-radius: 6px;
-    padding: 6px;
-    margin-bottom: 4px;
-  }
+.mappa {
+  width: 90%;
+  max-width: 650px;
+  background: linear-gradient(to bottom, #f3e5f5, #f8bbd0);
+  border: 2px solid #ba68c8;
+  border-radius: 14px;
+  padding: 20px;
+  margin: 30px auto 0;
+  box-shadow: 0 4px 10px rgba(186, 104, 200, 0.2);
+}
+
+.mappa h2 {
+  margin-top: 0;
+  color: #6a1b9a;
+  text-align: center;
+}
+
+.rami-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ramo {
+  animation: fadeIn 0.6s ease-in;
+}
+
+.ramo h3 {
+  color: #4a148c;
+  margin-bottom: 6px;
+  font-size: 1.2em;
+  border-left: 4px solid #ce93d8;
+  padding-left: 8px;
+}
+
+.ramo ul {
+  list-style: none;
+  padding-left: 12px;
+  margin: 0;
+}
+
+.ramo li {
+  background: #ede7f6;
+  border-left: 4px solid #ab47bc;
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-bottom: 4px;
+  font-size: 1em;
+  transition: transform 0.2s;
+}
+
+.ramo li:hover {
+  transform: scale(1.03);
+  background: #f3e5f5;
+  cursor: default;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 </style>
 
 <script>
-  const categorie = {
-    "Frutta": ["🍎", "🍒", "🍐", "🍍"],
-    "Fiori": ["🌹", "🌻", "🌸", "🌼"],
-    "Cereali": ["🌾", "🌽", "🥖"],
-    "Altro": []
-  };
+const categorie = {
+  "Frutta": ["🍎", "🍒", "🍐", "🍍"],
+  "Fiori": ["🌹", "🌻", "🌸", "🌼"],
+  "Cereali": ["🌾", "🌽", "🥖"],
+  "Altro": []
+};
 
-  function updateMappa() {
-    const map = document.getElementById('knowledge-map');
-    map.innerHTML = '';
+function updateMappa() {
+  const map = document.getElementById('knowledge-map');
+  map.innerHTML = '';
 
-    const rami = {};
-    for (const cat in categorie) rami[cat] = [];
+  const rami = {};
+  for (const cat in categorie) rami[cat] = [];
 
-    for (let i = 0; i < planted && i < seeds.length; i++) {
-      const seme = seeds[i];
-      let trovato = false;
-      for (const cat in categorie) {
-        if (categorie[cat].includes(seme.emoji)) {
-          rami[cat].push(seme);
-          trovato = true;
-          break;
-        }
+  for (let i = 0; i < planted && i < seeds.length; i++) {
+    const seme = seeds[i];
+    let trovato = false;
+
+    for (const cat in categorie) {
+      if (categorie[cat].includes(seme.emoji)) {
+        rami[cat].push(seme);
+        trovato = true;
+        break;
       }
-      if (!trovato) rami["Altro"].push(seme);
     }
 
-    for (const cat in rami) {
-      if (rami[cat].length === 0) continue;
-      const ramo = document.createElement('div');
-      ramo.className = 'ramo';
-      ramo.innerHTML = `<h3>${cat}</h3><ul>${rami[cat].map(s => `<li>${s.emoji} ${s.titolo}</li>`).join('')}</ul>`;
-      map.appendChild(ramo);
-    }
+    if (!trovato) rami["Altro"].push(seme);
   }
 
-  updateMappa();
+  for (const cat in rami) {
+    if (rami[cat].length === 0) continue;
+
+    const ramo = document.createElement('div');
+    ramo.className = 'ramo';
+
+    const lista = rami[cat].map(s => `<li>${s.emoji} ${s.titolo}</li>`).join('');
+
+    ramo.innerHTML = `
+      <h3>${cat}</h3>
+      <ul>${lista}</ul>
+    `;
+
+    map.appendChild(ramo);
+  }
+}
+updateMappa();
 </script>
